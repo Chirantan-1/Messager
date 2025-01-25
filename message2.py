@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, session, redirect, url_for
 
 app = Flask(__name__)
-app.secret_key = 'fhgfgyegfygfyegfyegfyufgeufygk'
+app.secret_key = 'set_key'
 
 names = [["A", "1234"], ["B", "2345"], ["C", "3456"], ["D", "4567"]]
 d = {"A": 0, "B": 1, "C": 2, "D": 3}
