@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messenger</title>
+    <style>
+        body { background-color: black; }
+        .glowing { text-shadow: 0 0 20px cyan, 0 0 25px cyan, 0 0 30px cyan; color: cyan; }
+        .green { color: rgb(57, 255, 20); text-shadow: 0 0 10px rgba(0, 255, 0, 0.8), 0 0 30px rgba(0, 255, 0, 0.4); }
+    </style>
+</head>
+<body>
+    <h2 class="glowing">Logged in as: {{ user }}</h2>
+    <form method="post">
+        <h2 class="glowing">Send Message</h2>
+        <label class="glowing">Recipient:</label>
+        <input name="user" required>
+        <label class="glowing">Message:</label>
+        <input name="cont" required>
+        <button type="submit">Send</button>
+    </form>
+    <form method="post">
+        <h2 class="glowing">Check Messages</h2>
+        <label class="glowing">From User:</label>
+        <input name="check_user" required>
+        <button type="submit">Check</button>
+    </form>
+    <h2 class="glowing">Messages:</h2>
+    {% for message in messages %}
+        <p class="green">{{ message }}</p>
+    {% endfor %}
+    <form method="post" action="/relogin">
+        <button type="submit">Logout</button>
+    </form>
+</body>
+</html>

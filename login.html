@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body { background-color: black; }
+        .glowing { text-shadow: 0 0 20px cyan, 0 0 25px cyan, 0 0 30px cyan; color: cyan; }
+        .red { color: rgb(247, 33, 25); text-shadow: 0 0 10px rgba(255, 0, 0, 1), 0 0 30px rgba(255, 0, 0, 1); }
+    </style>
+</head>
+<body>
+    <h2 class="glowing">Welcome to Messenger</h2>
+    <form method="post">
+        <label class="glowing">Username:</label>
+        <input name="name" required>
+        <label class="glowing">Password:</label>
+        <input type="password" name="password" required>
+        <button type="submit">Login</button>
+    </form>
+    {% if error %}
+        <p class="red">{{ error }}</p>
+    {% endif %}
+</body>
+</html>
