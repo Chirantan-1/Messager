@@ -4,7 +4,9 @@ app = Flask(__name__)
 app.secret_key = 'secret_key'
 
 names = [["A", "1234"], ["B", "2345"], ["C", "3456"], ["D", "4567"]]
-d = {"A": 0, "B": 1, "C": 2, "D": 3}
+d = {}
+for i, j in enumerate(names):
+    d[j[0]] = i 
 m = [[] for _ in names]
 
 @app.route("/", methods=["GET", "POST"])
