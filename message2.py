@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, session, redirect, url_for
 
 app = Flask(__name__)
-app.secret_key = 'set_key'
+app.secret_key = 'secret_key'
 
 names = [["A", "1234"], ["B", "2345"], ["C", "3456"], ["D", "4567"]]
 d = {"A": 0, "B": 1, "C": 2, "D": 3}
@@ -29,29 +29,33 @@ def mess():
         recipient = request.form.get("user")
         content = request.form.get("cont")
         if recipient in d and content:
-            recipient_index = d[recipient]
-            m[recipient_index].append([user, content])
-            max_count = 10
-            seen = {}
-            result = []
+            if len(content) < 110:
+                recipient_index = d[recipient]
+                m[recipient_index].append([user, content])
+                max_count = 10
+                seen = {}
+                result = []
 
-            for item in reversed(m[recipient_index]):
-                char = item[0]
-                if seen.get(char, 0) < max_count:
-                    result.append(item)
-                    seen[char] = seen.get(char, 0) + 1
+                for item in reversed(m[recipient_index]):
+                    char = item[0]
+                    if seen.get(char, 0) < max_count:
+                        result.append(item)
+                        seen[char] = seen.get(char, 0) + 1
 
-            result.reverse()
-            m[recipient_index] = result
-            print(m)
+                result.reverse()
+                m[recipient_index] = result
+                print(m)
 
         check_user = request.form.get("check_user")
         if check_user in d:
             check_user_index = d[check_user]
             messages = [msg[1] for msg in m[user_index] if msg[0] == check_user]
-            return render_template("message.html", user=user, messages=messages)
+            return render_template("message.html", user=user, messages=enumerate(messages), n=[_[0] for _ in names])
 
-    return render_template("message.html", user=user, messages=[])
+        return render_template("message.html", user=user, messages=[], n=[_[0] for _ in names])
+
+    return render_template("message.html", user=user, messages=[], n=[_[0] for _ in names])
+
 
 @app.route("/relogin", methods=["POST"])
 def relogin():
