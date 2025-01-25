@@ -8,27 +8,35 @@
         body { background-color: black; }
         .glowing { text-shadow: 0 0 20px cyan, 0 0 25px cyan, 0 0 30px cyan; color: cyan; }
         .green { color: rgb(57, 255, 20); text-shadow: 0 0 10px rgba(0, 255, 0, 0.8), 0 0 30px rgba(0, 255, 0, 0.4); }
+        .red { color: rgb(247, 33, 25); text-shadow: 0 0 10px rgba(255, 0, 0, 1), 0 0 30px rgba(255, 0, 0, 1); }
     </style>
 </head>
 <body>
     <h2 class="glowing">Logged in as: {{ user }}</h2>
+    <h3 class="green">Users: {{ n }}</h3>
     <form method="post">
         <h2 class="glowing">Send Message</h2>
-        <label class="glowing">Recipient:</label>
+        <label class="green"class="glowing">Recipient:</label>
         <input name="user" required>
-        <label class="glowing">Message:</label>
+        <label class="green">Message:</label>
         <input name="cont" required>
         <button type="submit">Send</button>
     </form>
+    {% if e1 %}
+        <p class="red">{{e1 }}</p>
+    {% endif %}
     <form method="post">
         <h2 class="glowing">Check Messages</h2>
-        <label class="glowing">From User:</label>
+        <label class="green">From User:</label>
         <input name="check_user" required>
         <button type="submit">Check</button>
     </form>
+    {% if e2 %}
+        <p class="red">{{ e2 }}</p>
+    {% endif %}
     <h2 class="glowing">Messages:</h2>
     {% for message in messages %}
-        <p class="green">{{ message }}</p>
+        <p class="green">{{ message[0] + 1}}. {{ message[1] }}</p>
     {% endfor %}
     <form method="post" action="/relogin">
         <button type="submit">Logout</button>
