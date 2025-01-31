@@ -4,10 +4,11 @@ app = Flask(__name__)
 app.secret_key = 'secret_key'
 
 names = [["A", "1234"], ["B", "2345"], ["C", "3456"], ["D", "4567"]]
-d = {}
-for i, j in enumerate(names):
-    d[j[0]] = i 
+
+d = {j[0]: i for i, j in enumerate(names)}
 m = [[] for _ in names]
+
+unread = [[0 for _ in names] for _ in names]
 
 @app.route("/", methods=["GET", "POST"])
 def main():
@@ -26,14 +27,19 @@ def mess():
         return redirect(url_for('main'))
     user = session['user']
     user_index = d[user]
-
+    
     if request.method == "POST":
         recipient = request.form.get("user")
         content = request.form.get("cont")
+        
         if recipient in d and content:
             if len(content) < 110:
                 recipient_index = d[recipient]
-                m[recipient_index].append([user, content])
+                
+                if not any(msg[0] == user and msg[1] == content for msg in m[recipient_index]):
+                    m[recipient_index].append([user, content, time.time()])
+                    unread[recipient_index][user_index] = 1
+                
                 max_count = 10
                 seen = {}
                 result = []
@@ -46,18 +52,51 @@ def mess():
 
                 result.reverse()
                 m[recipient_index] = result
-                print(m)
+            
+            return redirect(url_for('mess'))
+        
+        elif recipient:
+            return render_template(
+                "message.html", 
+                user=user, 
+                messages=[], 
+                n=list(zip([_[0] for _ in names], unread[user_index])), 
+                e1="Invalid User"
+            )
 
         check_user = request.form.get("check_user")
         if check_user in d:
             check_user_index = d[check_user]
-            messages = [msg[1] for msg in m[user_index] if msg[0] == check_user]
-            return render_template("message.html", user=user, messages=enumerate(messages), n=[_[0] for _ in names])
+            unread[user_index][check_user_index] = 0
+            
+            messages = sorted(
+                [[msg[1], msg[2], "r"] for msg in m[user_index] if msg[0] == check_user] +
+                [[msg[1], msg[2], "s"] for msg in m[check_user_index] if msg[0] == user],
+                key=lambda x: x[1]
+            )
+            return render_template(
+                "message.html", 
+                user=user, 
+                messages=enumerate(messages), 
+                n=list(zip([_[0] for _ in names], unread[user_index]))
+            )
+        elif check_user:
+            return render_template(
+                "message.html", 
+                user=user, 
+                messages=[], 
+                n=list(zip([_[0] for _ in names], unread[user_index])), 
+                e2="Invalid User"
+            )
 
-        return render_template("message.html", user=user, messages=[], n=[_[0] for _ in names])
-
-    return render_template("message.html", user=user, messages=[], n=[_[0] for _ in names])
-
+        return redirect(url_for('mess'))
+    
+    return render_template(
+        "message.html", 
+        user=user, 
+        messages=[], 
+        n=list(zip([_[0] for _ in names], unread[user_index]))
+    )
 
 @app.route("/relogin", methods=["POST"])
 def relogin():
@@ -66,3 +105,4 @@ def relogin():
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0")
+
