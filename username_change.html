@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body { background-color: black; }
+        .glowing { text-shadow: 0 0 20px cyan, 0 0 25px cyan, 0 0 30px cyan; color: cyan; }
+        .red { color: rgb(247, 33, 25); text-shadow: 0 0 10px rgba(255, 0, 0, 1), 0 0 30px rgba(255, 0, 0, 1); }
+        .green { color: rgb(57, 255, 20); text-shadow: 0 0 10px rgba(0, 255, 0, 0.8), 0 0 30px rgba(0, 255, 0, 0.4); }
+    </style>
+</head>
+<body>
+    <h2 class="glowing">Username Change</h2>
+    
+    <form method="post">
+        <label class="green"><br>Password:</label>
+        <input type="password" name="p" required>
+        <label class="green">New Username:</label>
+        <input type="password" name="u" required>
+        <button type="submit">Change</button>
+    </form>
+    
+    {% if error %}
+        <p class="red">{{ error }}</p>
+    {% endif %}
+</body>
+</html>
